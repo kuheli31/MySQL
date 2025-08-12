@@ -36,6 +36,57 @@ VALUES
 /*Displaying the Student Table*/
 SELECT *FROM student;
 
+CREATE TABLE course(
+	/*1st column = id*/
+    id INT PRIMARY KEY,
+    /*2nd column = name*/
+    course VARCHAR(50)
+);
+
+INSERT INTO course (id, course)
+VALUES
+(1, 'Mathematics'),
+(2, 'Physics'),
+(3, 'Computer Science');
+
+SELECT *FROM course;
+DROP TABLE course;
+
+/*INNER JOIN*/
+SELECT * FROM 
+student 
+INNER JOIN course
+WHERE student.id = course.id;
+
+/*ALIAS INNER JOIN*/
+SELECT * FROM 
+student as s1
+INNER JOIN course c1
+ON s1.id = c1.id;
+
+/*LEFT JOIN*/
+SELECT * FROM 
+student as s1
+LEFT JOIN course c1
+ON s1.id = c1.id;
+
+/*RIGHT JOIN*/
+SELECT * FROM 
+student as s1
+RIGHT JOIN course c1
+ON s1.id = c1.id;
+
+/*FULL JOIN*/
+SELECT * FROM 
+student as s1
+LEFT JOIN course c1
+ON s1.id = c1.id
+UNION
+SELECT * FROM 
+student as s1
+RIGHT JOIN course c1
+ON s1.id = c1.id;
+
 /*Displaying all the databases*/
 SHOW DATABASES;
 
@@ -63,7 +114,81 @@ VALUES
 (105, 'Ankit Verma', 59, 'D', 'Bangalore'),
 (106, 'Riya Mukherjee', 74, 'B', 'Hyderabad');
 
+DROP TABLE student1;
+
 SELECT * FROM student1;
+
+ALTER TABLE student1
+RENAME COLUMN name TO full_name;
+
+DELETE FROM student1
+WHERE marks<80;
+
+ALTER TABLE student1
+DROP COLUMN grades;
 
 /*Selecting specific columns*/
 SELECT name,marks FROM student1;
+
+-- Update grades
+UPDATE student1
+SET grade = 'O'
+WHERE grade = 'A';
+
+-- View updated results
+SELECT rollno, name, grade
+FROM student1;
+ 
+SET SQL_SAFE_UPDATES = 0;
+
+CREATE TABLE dept(
+id INT primary key,
+name varchar(50)
+);
+
+SELECT * FROM dept;
+
+CREATE TABLE teacher(
+id INT primary key,
+name varchar(50),
+dept_id INT,
+FOREIGN KEY (dept_id) REFERENCES dept(id)
+ON UPDATE CASCADE
+ON DELETE CASCADE
+);
+
+select * from teacher;
+
+/*SELF JOIN*/
+CREATE TABLE employee(
+id INT primary key,
+name varchar(50),
+mid int
+);
+
+INSERT INTO employee (id, name, mid)
+VALUES
+(101, 'Alice Johnson', NULL),     -- No manager
+(205, 'Bob Smith', 101),          -- Reports to Alice
+(317, 'Charlie Davis', 101),      -- Reports to Alice
+(412, 'Diana Roberts', 205),      -- Reports to Bob
+(523, 'Ethan Brown', 205),        -- Reports to Bob
+(634, 'Fiona Clark', 317),        -- Reports to Charlie
+(748, 'George Harris', 317),      -- Reports to Charlie
+(859, 'Hannah Lewis', 412),       -- Reports to Diana
+(964, 'Ian Walker', 523),         -- Reports to Ethan
+(1075, 'Julia Turner', 523);      -- Reports to Ethan
+
+SELECT * 
+FROM employee as e
+JOIN employee as m
+ON e.id = m.mid;
+
+/*SELF JOIN*/
+SELECT e.id AS emp_id,
+       e.name AS emp_name,
+       m.id AS mgr_id,
+       m.name AS mgr_name
+FROM employee AS e
+JOIN employee AS m
+    ON e.mid = m.id;
